@@ -1,0 +1,17 @@
+.board-view {
+    position: relative;
+    height: 500px;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .board-view .react-draggable {
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .board-view .react-draggable:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  

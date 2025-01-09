@@ -1,51 +1,53 @@
-import React, { useState } from "react";
-import { TwitterTweetEmbed } from "react-twitter-embed";
+import React from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import TweetCard from "./TweetCard";
 
-const TweetList = () => {
-    const [tweets, setTweets] = useState([]);
-    const [input, setInput] = useState("");
+const TweetList = ({ tweets, onReorder, onRemoveTweet }) => {
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
 
-    const handleAddTweet = () => {
-        const tweetId = extractTweetId(input);
-        if (tweetId) {
-            setTweets([...tweets, { id: tweetId, type: "id" }]);
-        } else {
-            setTweets([...tweets, { embedCode: input, type: "embed" }]);
-        }
-        setInput(""); // Clear input field
-    };
+    // Do nothing if dropped outside the list
+    if (!destination) return;
 
-    const extractTweetId = (url) => {
-        const regex = /twitter\.com\/(?:\w+)\/status\/(\d+)/;
-        const match = url.match(regex);
-        return match ? match[1] : null;
-    };
+    // Reorder the list
+    const reorderedTweets = Array.from(tweets);
+    const [movedTweet] = reorderedTweets.splice(source.index, 1);
+    reorderedTweets.splice(destination.index, 0, movedTweet);
 
-    return (
-        <div>
-            <div>
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Paste Tweet link or embed code"
-                />
-                <button onClick={handleAddTweet}>Add Tweet</button>
-            </div>
-            <div>
-                {tweets.map((tweet, index) =>
-                    tweet.type === "id" ? (
-                        <TwitterTweetEmbed key={index} tweetId={tweet.id} />
-                    ) : (
-                        <div
-                            key={index}
-                            dangerouslySetInnerHTML={{ __html: tweet.embedCode }}
-                        ></div>
-                    )
+    onReorder(reorderedTweets);
+  };
+
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="tweetList">
+        {(provided) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {tweets.map((tweet, index) => (
+              <Draggable key={tweet.id} draggableId={tweet.id} index={index}>
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    className="tweet-item flex items-center mb-4"
+                  >
+                    <TweetCard tweetId={tweet.tweetId} />
+                    <button
+                      onClick={() => onRemoveTweet(tweet.id)}
+                      className="ml-4 px-2 py-1 bg-red-500 text-white rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 )}
-            </div>
-        </div>
-    );
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 };
 
 export default TweetList;

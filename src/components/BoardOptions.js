@@ -19,18 +19,6 @@ function BoardOptions({ boardId, handleEdit }) {
   return (
     <div className="mt-4">
       <button
-        onClick={() => handleEdit("name")}
-        className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-      >
-        Edit Name
-      </button>
-      <button
-        onClick={() => handleEdit("description")}
-        className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-      >
-        Edit Description
-      </button>
-      <button
         onClick={handleDeleteBoard}
         className="px-4 py-2 bg-red-500 text-white rounded"
       >

@@ -7,7 +7,7 @@ function HomePage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-4xl font-bold">Tweet Curation Board</h1>
+      <h1 className="text-4xl font-bold">xboard</h1>
       <Link to="/new-board">
         <button className="mt-4 px-4 py-2 bg-green-500 text-white rounded">
           + Create a Board

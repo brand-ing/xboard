@@ -6,7 +6,9 @@ export const BoardContext = createContext();
 
 export function BoardProvider({ children }) {
   const [boards, setBoards] = useState([]);
- 
+  const [viewMode, setViewMode] = useState("list");
+  const [tweetURL, setTweetURL] = useState("");
+
   // sync from Firestore
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'boards'), (snapshot) => {
@@ -123,9 +125,24 @@ export function BoardProvider({ children }) {
     }
   };
   
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "list" ? "board" : "list"));
+  };
 
   return (
-  <BoardContext.Provider value={{ boards, addBoard, delBoard, addTweetToBoard, removeTweetFromBoard, updateBoard }}>
+  <BoardContext.Provider 
+    value={{ 
+      boards,
+      viewMode,
+      toggleViewMode,
+      addBoard,
+      delBoard,
+      addTweetToBoard,
+      removeTweetFromBoard,
+      updateBoard,
+      tweetURL,
+      setTweetURL, 
+  }}>
     {children}
   </BoardContext.Provider>
 
